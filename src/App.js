@@ -1,6 +1,9 @@
 import React from "react";
 import { Card, Button, Stack } from "react-bootstrap";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
+import Home from "./pages/Home";
+import Newarticle from "./pages/Newarticle";
 
 function App() {
   const blogInfo = [
@@ -9,7 +12,7 @@ function App() {
       date: "20-11-2022",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum deleniti enim eligendi repellat ex itaque accusamus sequi fuga et mollitia.",
-      ReadButton: "Read",
+      ReadButton: "Read More",
       EditButton: "Edit",
       DeleteButton: "Delete",
     },
@@ -18,7 +21,7 @@ function App() {
       date: "25-11-2022",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum deleniti enim eligendi repellat ex itaque accusamus sequi fuga et mollitia.",
-      ReadButton: "Read",
+      ReadButton: "Read More",
       EditButton: "Edit",
       DeleteButton: "Delete",
     },
@@ -27,7 +30,7 @@ function App() {
       date: "27-11-2022",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum deleniti enim eligendi repellat ex itaque accusamus sequi fuga et mollitia.",
-      ReadButton: "Read",
+      ReadButton: "Read More",
       EditButton: "Edit",
       DeleteButton: "Delete",
     },
@@ -36,7 +39,7 @@ function App() {
       date: "28-11-2022",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum deleniti enim eligendi repellat ex itaque accusamus sequi fuga et mollitia.",
-      ReadButton: "Read",
+      ReadButton: "Read More",
       EditButton: "Edit",
       DeleteButton: "Delete",
     },
@@ -63,12 +66,16 @@ function App() {
 
   return (
     <div className="App">
-      <div className="container mt-5">
-        <div className="blogtitle">
-          <h1>Blog Articles</h1>
-        </div>
-        <div className="row">{blogInfo.map(renderBlog)}</div>
-      </div>
+      <Router>
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={<Home blogInfo={blogInfo} renderBlog={renderBlog} />}
+          />
+          <Route path="/create-new-article" element={<Newarticle />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
