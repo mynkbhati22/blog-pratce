@@ -92,6 +92,25 @@ router.post("/headersliderimage", upload.single("image"), async (req, res) => {
   }
 });
 
+// API FOR UPDATING SLIDER
+
+router.post("/updateheaderslider", upload.single("image"), async (req, res) => {
+  try {
+    const { id } = req.body;
+    const headerImage = req.body.headerImage;
+    const url = req.body.url;
+
+    const updateheaderslider = await Headerimage.findByIdAndUpdate(id, {
+      headerImage: headerImage,
+      url: url,
+    });
+    console.log(updateheaderslider);
+    res.send(updateheaderslider);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // API FOR DELETING SLIDER
 
 router.delete("/deleteheadersliderimage/:id", async (req, res) => {
