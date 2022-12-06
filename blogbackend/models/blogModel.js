@@ -14,7 +14,7 @@ const blogSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-    tags: {
+    tag: {
       type: String,
       require: true,
     },
@@ -25,6 +25,7 @@ const blogSchema = mongoose.Schema(
     Img: {
       type: String,
       require: true,
+      unique: true,
     },
 
     body: {
@@ -36,6 +37,8 @@ const blogSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+// FOR VALIDATING URL
 
 const Blog = mongoose.model("blog", blogSchema);
 

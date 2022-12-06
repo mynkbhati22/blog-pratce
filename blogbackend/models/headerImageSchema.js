@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 
 const headerImageSchema = mongoose.Schema(
   {
-    headerImage: {
-      type: String,
-    },
-    url: {
+    Linknurl: {
       type: String,
       required: true,
+    },
+    headerImage: {
+      type: String,
+      require: true,
     },
   },
   {
