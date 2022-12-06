@@ -18,6 +18,11 @@ const blogSchema = mongoose.Schema(
       type: String,
       require: true,
     },
+    conclusion: {
+      type: String,
+      require: true,
+    },
+
     description: {
       type: String,
       require: true,
@@ -27,7 +32,6 @@ const blogSchema = mongoose.Schema(
       require: true,
       unique: true,
     },
-
     body: {
       type: String,
       require: true,
@@ -37,8 +41,6 @@ const blogSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
-// FOR VALIDATING URL
 
 const Blog = mongoose.model("blog", blogSchema);
 

@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const Blog = require("../models/blogModel");
 const Headerimage = require("../models/headerImageSchema");
+const Test = require("../models/schema");
 
 const router = express.Router();
 dotenv.config();
@@ -63,6 +64,17 @@ router.delete("/deleteheadersliderimage/:id", async (req, res) => {
   }
 });
 
+// API FOR GETTING BLOGS
+
+router.get("/gettingblogs", async (req, res) => {
+  try {
+    const gettingblogs = await Blog.find();
+    res.send(gettingblogs);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // API FOR ADDING BLOG
 
 router.post("/addingblogs", async (req, res) => {
@@ -76,115 +88,60 @@ router.post("/addingblogs", async (req, res) => {
   }
 });
 
-// FOR STORING IMAEGS IN S3
+// API FOR SLUG
 
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
+router.post("/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const findblogdata = await Blog.findOne({ slug: slug });
+    console.log(findblogdata);
+    res.send("ok");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-// const randomImageName = (bytes = 32) =>
-//   crypto.randomBytes(bytes).toString("hex");
+// FOR ADDING CATOGERY
 
-// const bucketName = process.env.AWS_BUCKET_NAME;
-// const bucketRegion = process.env.AWS_BUCKET_REGION;
-// const acessKey = process.env.AWS_ACCESS_KEY_ID;
-// const secretAccessKey = process.env.AWS_SECRET_KEY;
+router.post("/", async (req, res) => {
+  try {
+    const data = new Test(req.body);
+    console.log(data);
+    await data.save();
+    res.send("ok");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-// const s3 = new S3Client({
-//   credentials: {
-//     accessKeyId: acessKey,
-//     secretAccessKey: secretAccessKey,
-//   },
-//   region: bucketRegion,
-// });
-
-// API FOR GETTING IMAGE IN HEADER SLIDER FORNT END
-
-// router.get("/gettingheadersliderimage", async (req, res) => {
-//   try {
-//     const headersliderImageDetails = await Headerimage.find();
-//     const urlpost = [];
-
-//     for (let i = 0; i < headersliderImageDetails.length; i++) {
-//       const getObjectParams = {
-//         Bucket: bucketName,
-//         Key: headersliderImageDetails[i].headerImage,
-//       };
-//       const command = new GetObjectCommand(getObjectParams);
-//       const newurl = await getSignedUrl(s3, command, { expiresIn: 604800 });
-//       const newpost = {
-//         headerImage: headersliderImageDetails[i].headerImage,
-//         newurl,
-//         _id: headersliderImageDetails[i]._id,
-//         url: headersliderImageDetails[i].url,
-//       };
-
-//       urlpost.push(newpost);
-//     }
-//     res.send(urlpost);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-// API FOR ADDING IMAGE IN HEADER SLIDER FORNT END
-
-// router.post("/headersliderimage", upload.single("image"), async (req, res) => {
-//   try {
-//     // FOR S3
-//     const params = {
-//       Bucket: bucketName,
-//       Key: randomImageName(),
-//       Body: req.file.buffer,
-//       ContentType: req.file.mimetype,
-//     };
-//     const command = new PutObjectCommand(params);
-//     await s3.send(command);
-
-//     // FOR DATABASE
-
-//     const { url } = req.body;
-//     const headersliderImageDetails = await Headerimage.create({
-//       headerImage: command.input.Key,
-//       url,
-//     });
-//     res.send(headersliderImageDetails);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-// API FOR UPDATING SLIDER
-
-// router.post(
-//   "/updateheaderslider/:id",
-//   upload.single("image"),
-//   async (req, res) => {
-//     try {
-//       const { id } = req.params;
-//       const headerImage = req.body.headerImage;
-//       const url = req.body.url;
-
-//       const params = {
-//         Bucket: bucketName,
-//         Key: randomImageName(),
-//         Body: req.file.buffer,
-//         ContentType: req.file.mimetype,
-//       };
-//       const command = new PutObjectCommand(params);
-//       await s3.send(command);
-
-//       const updateslider = await Headerimage.findOneAndReplace(id, {
-//         headerImage: command.input.Key,
-//         url: url,
-//       });
-//       console.log("from params", updateslider);
-//       res.send("ok");
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-// );
-
-// API FOR DELETING SLIDER
+// FOR FILTER CAT
+router.post("/filtercat", async (req, res) => {
+  try {
+    const { cat } = req.body;
+    console.log(cat);
+    let filters = [];
+    if (Number(cat) === 0) {
+      filters = await Blog.find();
+    } else {
+      filters = await Blog.find({ catogery: cat });
+    }
+    const filtercats = [];
+    for (let i = 0; i < filters.length; i++) {
+      const newfilter = {
+        _id: filters[i]._id,
+        catogery: filters[i].catogery,
+        title: filters[i].title,
+        conclusion: filters[i].conclusion,
+        description: filters[i].description,
+        Img: filters[i].Img,
+        body: filters[i].body,
+      };
+      console.log(newfilter);
+      filtercats.push(newfilter);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;
