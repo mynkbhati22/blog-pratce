@@ -69,7 +69,8 @@ router.delete("/deleteheadersliderimage/:id", async (req, res) => {
 router.get("/gettingblogs", async (req, res) => {
   try {
     const gettingblogs = await Blog.find();
-    res.send(gettingblogs);
+    res.send(gettingblogs.reverse());
+    // console.log(gettingblogs.length);
   } catch (error) {
     console.log(error);
   }
@@ -82,7 +83,7 @@ router.post("/addingblogs", async (req, res) => {
     const addingblogs = new Blog(req.body);
     console.log("adddedblog", addingblogs);
     await addingblogs.save();
-    res.send("ok");
+    res.send(addingblogs);
   } catch (error) {
     console.log(error);
   }
@@ -90,12 +91,24 @@ router.post("/addingblogs", async (req, res) => {
 
 // API FOR SLUG
 
-router.post("/:slug", async (req, res) => {
+router.post("/detail", async (req, res) => {
   try {
-    const { slug } = req.params;
+    const { slug } = req.body;
     const findblogdata = await Blog.findOne({ slug: slug });
     console.log(findblogdata);
-    res.send("ok");
+    res.send(findblogdata);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// FOR GETTING CATOGERY
+
+router.get("/", async (req, res) => {
+  try {
+    const gettingdata = await Test.find();
+    res.send(gettingdata);
+    console.log(gettingdata.length);
   } catch (error) {
     console.log(error);
   }
@@ -108,37 +121,49 @@ router.post("/", async (req, res) => {
     const data = new Test(req.body);
     console.log(data);
     await data.save();
-    res.send("ok");
+    res.send(data);
   } catch (error) {
     console.log(error);
   }
 });
 
-// FOR FILTER CAT
-router.post("/filtercat", async (req, res) => {
+// API FOR UPDATING BLOGS
+
+router.post("/updateblogs", async (req, res) => {
   try {
-    const { cat } = req.body;
-    console.log(cat);
-    let filters = [];
-    if (Number(cat) === 0) {
-      filters = await Blog.find();
-    } else {
-      filters = await Blog.find({ catogery: cat });
-    }
-    const filtercats = [];
-    for (let i = 0; i < filters.length; i++) {
-      const newfilter = {
-        _id: filters[i]._id,
-        catogery: filters[i].catogery,
-        title: filters[i].title,
-        conclusion: filters[i].conclusion,
-        description: filters[i].description,
-        Img: filters[i].Img,
-        body: filters[i].body,
-      };
-      console.log(newfilter);
-      filtercats.push(newfilter);
-    }
+    const id = req.body.id;
+    const title = req.body.title;
+    const description = req.body.description;
+    const Img = req.body.Img;
+    const heading1 = req.body.heading1;
+    const body1 = req.body.body1;
+    const heading2 = req.body.heading2;
+    const body2 = req.body.body2;
+
+    const updateBlog = await Blog.findByIdAndUpdate(id, {
+      title: title,
+      description: description,
+      Img: Img,
+      heading1: heading1,
+      body1: body1,
+      heading2: heading2,
+      body2: body2,
+    });
+    res.send(updateBlog);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API FOR DELETING BLOGS IMAGE
+
+router.delete("/deleteblogs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const blog = await Blog.findByIdAndDelete({ _id: id });
+    console.log(blog);
+    res.send(blog);
   } catch (error) {
     console.log(error);
   }

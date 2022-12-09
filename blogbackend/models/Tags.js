@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const tags = mongoose.Schema({
-  Name: {
+  Tagname: {
     type: String,
     require: true,
   },

@@ -22,7 +22,10 @@ const blogSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-
+    date: {
+      type: String,
+      require: true,
+    },
     description: {
       type: String,
       require: true,
@@ -32,7 +35,19 @@ const blogSchema = mongoose.Schema(
       require: true,
       unique: true,
     },
-    body: {
+    heading1: {
+      type: String,
+      require: true,
+    },
+    body1: {
+      type: String,
+      require: true,
+    },
+    heading2: {
+      type: String,
+      require: true,
+    },
+    body2: {
       type: String,
       require: true,
     },

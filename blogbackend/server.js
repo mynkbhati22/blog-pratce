@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const useRouter = require("./router/useRouter");
+const Tag = require("./models/Tags");
 
 const app = express();
 
@@ -17,6 +18,31 @@ app.get("/", (req, res) => {
 
 app.use("/api", useRouter);
 
-const PORT = process.env.PORT || 8000;
+// FOR GETTING TAGS
+
+app.get("/gettags", async (req, res) => {
+  try {
+    const gettingdata = await Tag.find();
+    res.send(gettingdata);
+    console.log(gettingdata.length);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// FOR ADDING TAGS
+
+app.use("/tags", async (req, res) => {
+  try {
+    const data = new Tag(req.body);
+    console.log(data);
+    await data.save();
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const PORT = process.env.PORT || 8001;
 
 app.listen(PORT, console.log(`server is running on PORT ${PORT}`));
