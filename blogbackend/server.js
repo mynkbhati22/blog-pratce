@@ -43,6 +43,18 @@ app.use("/tags", async (req, res) => {
   }
 });
 
+// FOR DELETING API
+app.use("/deleteapi/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const blog = await Tag.findByIdAndDelete({ _id: id });
+    console.log(blog);
+    res.send(blog);
+  } catch (error) {
+    console.log(error);
+  }
+});
 const PORT = process.env.PORT || 8001;
 
 app.listen(PORT, console.log(`server is running on PORT ${PORT}`));
