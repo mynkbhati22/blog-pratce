@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const Blog = require("../models/blogModel");
 const Headerimage = require("../models/headerImageSchema");
 const Test = require("../models/schema");
+const ExternalBlog = require("../models/externalBlogSchema");
 
 const router = express.Router();
 dotenv.config();
@@ -162,6 +163,68 @@ router.delete("/deleteblogs/:id", async (req, res) => {
     const { id } = req.params;
     console.log(id);
     const blog = await Blog.findByIdAndDelete({ _id: id });
+    console.log(blog);
+    res.send(blog);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API for getting external blogs
+router.get("/gettingexternalblogs", async (req, res) => {
+  try {
+    const gettingexternalblogs = await ExternalBlog.find();
+    res.send(gettingexternalblogs.reverse());
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API for posting external blogs
+
+router.post("/externalblogs", async (req, res) => {
+  try {
+    const externaladdingblogs = new ExternalBlog(req.body);
+    console.log("externaladdingblogs", externaladdingblogs);
+    await externaladdingblogs.save();
+    res.send(externaladdingblogs);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API for updating externals blogs
+
+router.post("/updateexternalblogs", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const title = req.body.title;
+    const slug = req.body.slug;
+    const date = req.body.date;
+    const Img = req.body.Img;
+    const source = req.body.source;
+
+    const updateExternalBlogs = await ExternalBlog.findByIdAndUpdate(id, {
+      title: title,
+      slug: slug,
+      date: date,
+      Img: Img,
+      source: source,
+    });
+    console.log("updateExternalBlogs is: ", updateExternalBlogs);
+    res.send(updateExternalBlogs);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API for deleting external blogs
+
+router.delete("/deleteexternalblogs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const blog = await ExternalBlog.findByIdAndDelete({ _id: id });
     console.log(blog);
     res.send(blog);
   } catch (error) {
