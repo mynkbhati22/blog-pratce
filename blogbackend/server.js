@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const useRouter = require("./router/useRouter");
 const Tag = require("./models/Tags");
+const Externalcat = require("./models/externalcatogery");
 
 const app = express();
 
@@ -55,6 +56,31 @@ app.use("/deleteapi/:id", async (req, res) => {
     console.log(error);
   }
 });
+
+// FOR GETTING EXTERNAL CAT
+
+app.get("/gettingexternalcat", async (req, res) => {
+  try {
+    const data = await Externalcat.find();
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// FOR ADDING EXTERNAL BLOGS
+
+app.use("/externalblogcatogery", async (req, res) => {
+  try {
+    const data = new Externalcat(req.body);
+    console.log("addedexternalcatogery", data);
+    await data.save();
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const PORT = process.env.PORT || 8001;
 
 app.listen(PORT, console.log(`server is running on PORT ${PORT}`));

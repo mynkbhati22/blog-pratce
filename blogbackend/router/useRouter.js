@@ -199,17 +199,17 @@ router.post("/updateexternalblogs", async (req, res) => {
   try {
     const id = req.body.id;
     const title = req.body.title;
-    const slug = req.body.slug;
-    const date = req.body.date;
     const Img = req.body.Img;
-    const source = req.body.source;
+    const BodyHeading = req.body.BodyHeading;
+    const externallinks = req.body.externallinks;
+    const summary = req.body.summary;
 
     const updateExternalBlogs = await ExternalBlog.findByIdAndUpdate(id, {
       title: title,
-      slug: slug,
-      date: date,
       Img: Img,
-      source: source,
+      summary: summary,
+      BodyHeading: BodyHeading,
+      externallinks: externallinks,
     });
     console.log("updateExternalBlogs is: ", updateExternalBlogs);
     res.send(updateExternalBlogs);

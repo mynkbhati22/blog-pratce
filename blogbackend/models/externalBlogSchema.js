@@ -6,12 +6,15 @@ const externalBlogSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-    slug: {
+    date: {
       type: String,
       require: true,
     },
-
-    date: {
+    summary: {
+      type: String,
+      require: true,
+    },
+    catogery: {
       type: String,
       require: true,
     },
@@ -22,7 +25,11 @@ const externalBlogSchema = mongoose.Schema(
       unique: true,
     },
 
-    source: {
+    BodyHeading: {
+      type: String,
+      require: true,
+    },
+    externallinks: {
       type: String,
       require: true,
     },
