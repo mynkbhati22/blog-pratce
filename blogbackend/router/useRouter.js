@@ -5,9 +5,59 @@ const Headerimage = require("../models/headerImageSchema");
 const Test = require("../models/schema");
 const ExternalBlog = require("../models/externalBlogSchema");
 const Token = require("../models/tokenImage");
+const User = require("../models/adminSignup");
+const generateToken = require("../utils/generateTokens");
 
 const router = express.Router();
 dotenv.config();
+
+// API FOR LOGIN AND SIGNUP
+
+router.post("/adminsignup", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    console.log(req.body);
+    const userExist = await User.findOne({ username });
+
+    if (userExist) {
+      res.status(403).send("User Already Exists");
+      throw new Error("User Already Exists");
+    }
+    const user = await User.create({
+      username,
+      password,
+    });
+
+    if (user) {
+      res.status(201).json({
+        _id: user.id,
+        username: user.username,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(404);
+      throw new Error("Something went wrong!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+// API FOR LOGIN
+router.post("/adminlogin", async (req, res) => {
+  const { username, password } = req.body;
+  console.log("reqbody", req.body);
+  const user = await User.findOne({ username });
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user.id,
+      username: user.username,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("Invaild email or password!");
+  }
+});
 
 // API FOR GETTING API
 
