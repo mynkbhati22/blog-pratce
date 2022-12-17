@@ -4,6 +4,7 @@ const Blog = require("../models/blogModel");
 const Headerimage = require("../models/headerImageSchema");
 const Test = require("../models/schema");
 const ExternalBlog = require("../models/externalBlogSchema");
+const Token = require("../models/tokenImage");
 
 const router = express.Router();
 dotenv.config();
@@ -227,6 +228,61 @@ router.delete("/deleteexternalblogs/:id", async (req, res) => {
     const blog = await ExternalBlog.findByIdAndDelete({ _id: id });
     console.log(blog);
     res.send(blog);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API FOR GETTING TOKENS
+
+router.get("/gettingtoken", async (req, res) => {
+  try {
+    const gettingToken = await Token.find();
+    res.send(gettingToken);
+  } catch (error) {
+    console.log(error);
+  }
+});
+// API FOR ADDING TOKENS
+
+router.post("/addingtoken", async (req, res) => {
+  try {
+    const addingToken = new Token(req.body);
+    await addingToken.save();
+    res.send(addingToken);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API FOR UPDATING TOKENS
+
+router.post("/updatetoken", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const tokenaddress = req.body.tokenaddress;
+    const logoname = req.body.logoname;
+    const tokenimage = req.body.tokenimage;
+
+    const updateToken = await Token.findByIdAndUpdate(id, {
+      tokenaddress: tokenaddress,
+      logoname: logoname,
+      tokenimage: tokenimage,
+    });
+    res.send(updateToken);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// API FOR DELETING TOKENS
+
+router.delete("/deletetoken/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const deleteToken = await Token.findByIdAndDelete({ _id: id });
+    res.send(deleteToken);
   } catch (error) {
     console.log(error);
   }
